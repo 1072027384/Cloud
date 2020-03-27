@@ -2,7 +2,7 @@ import  requests
 
 
 url="http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule"
-from_data={
+form_data={
 'i':'你和我都是',
 'from':'AUTO',
 'to':'AUTO',
@@ -14,10 +14,9 @@ from_data={
 'bv':'4b9de992aa3d23c2999121d735e53f9c',
 'doctype':'json',
 'version':'2.1',
-'keyfrom:'fanyi.web',
-'action':'FY_BY_REALTlME'}
+'keyfrom':'fanyi.web',
+'action':'FY_BY_REALTlME'
+}
 
-response=requests.post(url,form_date)
+response=requests.post(url,data=form_data)
 print(response.text)
-
-
