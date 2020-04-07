@@ -1,14 +1,21 @@
-import  requests
+import random
 
+import  requests
+import  time
 
 url="http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule"
 
 
 def get_salt():
+    s=str(random.randint(0,10))
+    t=get_ts()
+    print("random=",s)
+    print("ts=",t)
+    print("salt=",t+s)
     return '1584684399307'
+    return t+s
 
-
-def git_sign():
+def get_sign():
     return 'b2ba12b30ffe0261057d8e59fcbe39cc'
 
 
