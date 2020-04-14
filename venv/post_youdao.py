@@ -1,8 +1,8 @@
 import random
 import  requests
 import  time
-
-
+import hashlib
+import json
 
 
 class Youdao():
@@ -16,20 +16,15 @@ class Youdao():
 
 
     def get_salt(self):
-        s = str(random.randint(0, 10))
-        t = self.ts
-        return t + s
+        return self.ts + str(random.randint(0, 10))
 
     def get_md5(self,value):
-        import hashlib
         m = hashlib.md5()
         m.update(value.encode("utf-8"))
         return m.hexdigest()
 
     def get_sign(self):
-        i = self.salt
-        e = self.content
-        s = "fanyideskweb" + e + i + "Nw(nmmbP%A-r6U3EUn]Aj"
+        s = "fanyideskweb" + self.content + self.salt + "Nw(nmmbP%A-r6U3EUn]Aj"
         return self.get_md5(s)
 
     def get_ts(self):
@@ -41,7 +36,7 @@ class Youdao():
         return content
 
     def yield_form_data(self):
-        form_data = {
+        return  {
             'i': self.content,
             'from': 'AUTO',
             'to': 'AUTO',
@@ -56,23 +51,26 @@ class Youdao():
             'keyfrom': 'fanyi.web',
             'action': 'FY_BY_REALTlME'
         }
-        return form_data
 
 
-    def get_headers(self):
-        headers = {
+    def yield_headers(self):
+         return {
             'Cookie': 'OUTFOX_SEARCH_USER_ID = 448036216@10.169.0.82;OUTFOX_SEARCH_USER_ID_NCOO = 1424564220.2692347;JSESSIONID = aaahViJUBLIF_4jcItYfx;___rl__test__cookies = 1586760675060',
             'Referer': 'http://fanyi.youdao.com/',
             'User-Agent': 'Mozilla / 5.0(Windows NT 10.0;WOW64) AppleWebKit / 537.36(KHTML, likeGecko) Chrome / 55.0.2883.87UBrowser / 6.2.4098.3Safari / 537.36',
         }
-        return headers
+
 
 
     def fanyi(self):
-        response= requests.post(self.url, data=self.yield_form_data(),headers=self.get_headers())
-        return response.text
+        response= requests.post(self.url, data=self.yield_form_data(), headers=self.yield_headers())
+        content=json.loads(response.text)
+
+        return content['translateResult'][0][0]['tgt']
 
 
 if __name__ == '__main__':
-    youdao = Youdao('我们')
-    print(youdao.fanyi())
+    while(True):
+        i=input("please input : ")
+        youdao = Youdao(i)
+        print("translation result : ",youdao.fanyi())
